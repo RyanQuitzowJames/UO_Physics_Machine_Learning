@@ -38,6 +38,52 @@ df[['Year', 'Month', 'Day', 'Hour', 'Minute', 'Second']] = df['Dates'].str.split
 
 print(df.head(10))
 
+def asign_streets(street_name, street_name_list):
+    num_streets = len(street_name_list)
+    street_name_dict = {(street_name_list[num], num) for num in range(num_streets)}
+    if street_name in street_name_dict:
+        return street_name_dict[street_name]
+    else:
+        return num_streets
+
+#print(pd.value_counts(df['Address2'])[:21])
+named_streets = pd.value_counts(df['Address2'])[:21].index.values
+print(named_streets)
+
+df['Address2_1'] = df['Address2'].map(lambda x: asign_streets(x, named_streets))
+
+named_streets_2 = pd.value_counts(df['Address3'])[:44].index.values
+print(named_streets_2)
+
+df['Address3_1'] = df['Address3'].map(lambda x: asign_streets(x, named_streets_2))
+
+print(df.head(10))
+
+weekdays = pd.value_counts(df['DayOfWeek']).index.values
+weekdays = {weekdays[x]: x for x in range(len(weekdays))} 
+
+print(weekdays)
+
+df['Weekday'] = df['DayOfWeek'].map(weekdays)
+
+print(df.head(10))
+
+categories = pd.value_counts(df['Category']).index.values
+categories = {categories[x]: x for x in range(len(categories))} 
+
+print(categories)
+
+df['Outcome'] = df['Category'].map(categories)
+
+print(df.head(10))
+
+print(df.columns.values)
+
+#train_data = df[['Id','Outcome','Weekday','Address3_1','Address2_1','Year','Month','Day','Hour','Minute','X_binned','Y_binned']]
+train_data = df[['Outcome','Weekday','Address3_1','Address2_1','Year','Month','Day','Hour','Minute','X_binned','Y_binned']]
+
+print(train_data.head(2))
+
 #train_data = cleaned_df.values
 #test_data = cleaned_df_test.values
 
